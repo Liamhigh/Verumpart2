@@ -1,0 +1,140 @@
+Verum Omnis V1 – Change Log & Developer Notes
+=============================================
+
+Author: Earl + ChatGPT
+Date: Aug 28, 2025
+
+Purpose: This document lists all changes made during cleanup so Liam can 
+review, understand, and continue work.
+
+----------------------------------------------------------------------
+FILES MODIFIED / FIXED
+----------------------------------------------------------------------
+
+1) res/values/strings.xml
+   - Added new string resource:
+       <string name="action_select_file">Select File</string>
+   - Replaced hardcoded "Select File" in layout with this resource.
+   - Confirmed contract strings exist: app_name, title_main, action_verify,
+     action_generate_pdf, notice_trial, disclaimer, rules_only_mode.
+
+2) res/layout/activity_main.xml
+   - Wrapped the whole layout inside a <ScrollView> to prevent clipping on 
+     small screens (scrollable if content overflows).
+   - Changed Select button text reference to "@string/action_select_file".
+   - Verified logo, title, and three buttons are correctly wired.
+
+3) res/values/colors.xml
+   - Defined branding colors:
+       verum_blue = #0C3C78
+       steel_grey = #30343A
+       pure_white = #FFFFFFFF
+
+4) res/values/styles.xml
+   - Removed duplicate Theme.VerumOmnis (moved all theme work into themes.xml).
+   - Now serves only as placeholder for future widget styles.
+
+5) res/values/themes.xml
+   - Created main Theme.VerumOmnis based on MaterialComponents.DayNight.NoActionBar.
+   - Added colorPrimary, colorPrimaryVariant, colorSecondary mapped to our brand colors.
+   - Added default textColor and background.
+   - Ensured compatibility with modern MaterialComponents.
+
+6) res/values-night/themes.xml
+   - Created dark mode variant of Theme.VerumOmnis (optional customization).
+
+7) AndroidManifest.xml
+   - Fixed theme mismatch: replaced old "Theme.VerumOmnisVersion1" with "Theme.VerumOmnis".
+   - Restored proper structure: <manifest> wraps <application>.
+   - Application now points to @mipmap/ic_launcher (adaptive icons).
+   - Added INTERNET permission (required by file chooser + networking if needed).
+
+8) res/drawable/ic_verum_logo.png
+   - Retained as the in-app logo (used in activity_main.xml).
+
+9) res/drawable/ic_verum_logo.xml
+   - Removed (was duplicate/conflict with PNG).
+   - Adaptive icon XMLs live in mipmap-anydpi-v26, not drawable.
+
+10) res/mipmap-anydpi-v26/
+   - Verified ic_launcher.xml and ic_launcher_round.xml exist as adaptive icons.
+   - Clean separation: mipmap for launcher icons, drawable for app logos.
+
+----------------------------------------------------------------------
+JAVA SIDE (MAJOR CHANGES)
+----------------------------------------------------------------------
+
+1) MainActivity.java
+   - Wired up to AnalysisEngine, MediaForensics, and PDFSealer.
+   - Added button IDs consistent with activity_main.xml (selectBtn, verifyBtn, pdfBtn).
+   - Added ActivityResultLauncher for ACTION_OPEN_DOCUMENT (modern API).
+   - Calls into IntegrityChecker + RulesEngine where required.
+   - TODO: Liam must edit the section that invokes ReportMailer (or custom SMTP handler)
+     → configure his mail server, recipients, subject/body.
+
+2) ReportMailer.java (NEW / rewired)
+   - Stateless mail-sender utility under com.verum.omnis.core.
+   - Accepts File (PDF), Metadata JSON, Recipient(s).
+   - Currently stubbed (no SMTP). Liam must configure real SMTP (host/port/user/pass).
+
+3) PDFSealer.java
+   - Now injects logo (top), watermark (center), certification block (bottom-right).
+   - Computes SHA-512 hash, embeds QR code via QRUtil.
+   - Output: court-ready PDF/A-3B placeholder.
+
+4) MediaForensics.java
+   - Expanded to extract EXIF metadata from images.
+   - Reads duration from audio/video (via ExifInterface).
+   - Lightweight PDF header parsing.
+
+5) AnalysisEngine.java
+   - Orchestrates SHA-512 (HashUtil), MediaForensics, JSON report packaging.
+
+6) RulesEngine.java
+   - Applies detection_rules.json locally.
+   - Supports "Rules-Only Mode" (strings.xml updated).
+
+7) RnDMeshExchange.java
+   - Stateless mesh exchange for training directives.
+   - Added integrity fields (SHA-512).
+
+8) New Classes Added
+   - BusinessFraudExtractor.java → parses entity info from docs.
+   - CompanyDetector.java → detects company names.
+   - RecoveryLedger.java → placeholder for ledgering forensic results.
+
+9) IntegrityChecker.java
+   - Added to com.verum.omnis.security.
+   - Ensures no tampering before report is sealed.
+
+10) RnDReportExporter.java
+   - Stateless exporter for demo PDFs (cache).
+   - Placeholder until replaced with audited PDF/A-3B engine.
+
+----------------------------------------------------------------------
+IMPORTANT NOTE ABOUT FILE NAMES
+----------------------------------------------------------------------
+- Earlier builds failed because of duplicate resource names (ic_verum_logo.png vs ic_verum_logo.xml).
+- Fixed by ensuring:
+   • PNG logo stays in res/drawable/ic_verum_logo.png (used inside app UI).
+   • Adaptive icons live in res/mipmap-anydpi-v26/ic_launcher.xml & ic_launcher_round.xml.
+- Liam: if adding new assets, avoid name collisions across drawable/mipmap folders.
+
+----------------------------------------------------------------------
+NEXT STEPS FOR LIAM
+----------------------------------------------------------------------
+- Configure ReportMailer (MainActivity.java calls it).
+  Edit SMTP/API details → set up real email delivery.
+- Verify new AI/forensic classes integrate as expected.
+- Optional: Add further widget styles into styles.xml (safe now).
+- Ensure all new assets follow naming rules (see note above).
+- Package: exclude build/, .idea/, .gradle/ when zipping.
+
+----------------------------------------------------------------------
+META NOTES (for ChatGPT follow-up)
+----------------------------------------------------------------------
+- This is the "handoff baseline" for Liam.
+- All duplicates fixed (strings, theme, logo).
+- Scroll issue resolved in activity_main.xml.
+- Manifest corrected, unified theme.
+- Email integration is Liam's main TODO.

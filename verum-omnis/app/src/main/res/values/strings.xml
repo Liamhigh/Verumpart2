@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Verum Omnis</string>
+    <string name="title_main">Verum Omnis v5.2.6</string>
+
+    <!-- Button labels -->
+    <string name="action_select_file">Select File</string>
+    <string name="action_verify">Verify</string>
+    <string name="action_generate_pdf">Generate PDF</string>
+
+    <!-- Notices -->
+    <string name="notice_trial">Institutions and Companies: Trial access. Licensing fees apply after trial.</string>
+    <string name="disclaimer">For individuals: free. We do not store your data. All processing is local.</string>
+
+    <!-- Extra -->
+    <string name="rules_only_mode">Rules-Only Mode active (models not installed)</string>
+</resources>

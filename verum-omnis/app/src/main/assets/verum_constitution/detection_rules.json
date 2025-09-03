@@ -1,0 +1,95 @@
+{
+  "version": "relentless-truth-enforcement-v1",
+  "non_negotiables": [
+    "TRUTH_PRIORITY",
+    "DETERMINISM",
+    "NO_HUMAN_OVERRIDES",
+    "INDEPENDENT_CORROBORATION",
+    "EXPLAINABILITY",
+    "MINIMAL_DISCLOSURE",
+    "SEALED_OUTPUTS"
+  ],
+  "contradictions": {
+    "micro_drift": {
+      "threshold_chars": 2,
+      "window_days": 3650,
+      "description": "Small wording shifts across time in same fact pattern"
+    },
+    "semantic_drift": {
+      "embedding_delta_min": 0.12,
+      "description": "Meaning shift with similar surface text"
+    },
+    "over_specific_denial": {
+      "patterns": [
+        "I never on <exact_date>",
+        "I did not email <person> at <time>"
+      ],
+      "description": "Narrow denial to avoid broader truth"
+    },
+    "selective_omission": {
+      "evidence_gap_secs": 60,
+      "description": "Missing expected artifacts within time window"
+    },
+    "inversion_check": {
+      "require_previous_affirmation": true
+    }
+  },
+  "behavioral": {
+    "hedging_terms": [
+      "sort of",
+      "maybe",
+      "kind of",
+      "from what I recall",
+      "I think",
+      "to be honest",
+      "as far as I know"
+    ],
+    "hedging_density_warn": 0.08,
+    "aggression_markers": [
+      "calm down",
+      "stop asking",
+      "this is harassment",
+      "why do you care"
+    ],
+    "pressure_response_shift_delta": 0.25
+  },
+  "forensic": {
+    "metadata_diff_strict": true,
+    "recompression_artifact_score_min": 0.6,
+    "deepfake_heuristics": {
+      "face_swap_hint": true,
+      "edge_inconsistency": true
+    }
+  },
+  "timeline_geo": {
+    "clock_skew_max_minutes": 2,
+    "geo_speed_max_kmh": 900,
+    "why_now_latency_days_warn": 7
+  },
+  "finance": {
+    "amount_drift_percent_warn": 5.0,
+    "shell_hop_max_depth_warn": 3
+  },
+  "legal": {
+    "triple_corroboration_required": true,
+    "jurisdiction_pack_required": true
+  },
+  "scoring": {
+    "weights": {
+      "contradictions": 0.4,
+      "behavioral": 0.15,
+      "forensic": 0.2,
+      "timeline_geo": 0.1,
+      "finance": 0.1,
+      "legal": 0.05
+    },
+    "dishonesty_threshold_percent": 20
+  },
+  "enforcement": {
+    "refuse_no_contradictions_unless_all_checks_pass": true,
+    "concealment_output": "INDETERMINATE_DUE_TO_CONCEALMENT",
+    "cumulative_history": true,
+    "highlight_minor_anomalies": true,
+    "opponent_strategy_mapping": true
+  }
+}

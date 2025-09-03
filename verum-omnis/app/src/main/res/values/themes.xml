@@ -1,0 +1,19 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme -->
+    <style name="Theme.VerumOmnis" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Brand colors -->
+        <item name="colorPrimary">@color/verum_blue</item>
+        <item name="colorPrimaryVariant">@color/steel_grey</item>
+        <item name="colorSecondary">@color/verum_blue</item>
+
+        <!-- Status + nav bars -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+
+        <!-- Default text & background -->
+        <item name="android:textColor">@color/pure_white</item>
+        <item name="android:colorBackground">@color/steel_grey</item>
+    </style>
+
+</resources>
